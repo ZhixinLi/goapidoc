@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{.headTitle}}</title>
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <link href="/resource/css/main.css" rel="stylesheet" type="text/css"/>
+        <!-- 通用 -->
+        {{include "layout/common.html"}}
+
+        <script src="resource/js-package/html5shiv.min.js"></script>
+        <script src="resource/js-package/respond.min.js"></script>
+        <script src="resource/js/main.js"></script>
+    </head>
+    <body class="skin-yellow-light">
+        <!-- Site wrapper -->
+        <div class="wrapper">
+            <!--页面头部-->
+            {{include "layout/header.html"  .viewdata}}
+            <!--左侧导航条-->
+            {{include "layout/sidebar.html" .viewdata}}
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                <!--页面标题-->
+
+                <!-- Main content -->
+                <section class="content">
+                    <!--页面内容-->
+                    {{include .mainTpl .viewdata}}
+                </section>
+                <!-- /.content -->
+            </div>
+        </div>
+    </body>
+</html>

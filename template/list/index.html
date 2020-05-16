@@ -1,0 +1,47 @@
+<section class="content-header">
+    <h1>
+        {{if eq .op 1}}
+        {{print "<button class='btn btn-success'>新建分组</button> <button class='btn btn-warning'>添加接口</button>"}}
+        {{end}}
+    </h1>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">分组</h3>
+
+                    <div class="box-tools">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body no-padding">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox</a></li>
+                        <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
+                        <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
+                        <li><a href="#"><i class="fa fa-filter"></i> Junk </a></li>
+                        <li><a href="#"><i class="fa fa-trash-o"></i> Trash</a></li>
+                    </ul>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /. box -->
+        </div>
+        <div class="col-md-10">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Inbox</h3>
+                </div>
+                <div class="box-body">
+                </div>
+                <div class="box-footer no-padding">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

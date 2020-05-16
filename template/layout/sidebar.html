@@ -1,0 +1,21 @@
+<aside class="main-sidebar">
+    <section class="sidebar">
+        <ul class="sidebar-menu">
+            {{range $key,$data:=.bigMenu}}
+            <li class="treeview" id="{{$data.controller}}">
+                <a href="/list?pid={{$data.id}}">
+                    <i class="fa fa-circle-o text-aqua"></i>
+                    <span>{{$data.name}}</span>
+                </a>
+            </li>
+            {{end}}
+        </ul>
+    </section>
+</aside>
+
+<script>
+    var controllerId = "{$menubigid}";
+    $('#' + controllerId).addClass('active');
+    var activeId = "menu-{$menusmallid}";
+    $('#' + activeId).addClass('active');
+</script>
