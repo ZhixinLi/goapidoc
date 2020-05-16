@@ -24,15 +24,15 @@ var (
 	Model = &arModel{g.DB("default").Table(Table).Safe()}
 	// Columns defines and stores column names for table whitelist.
 	Columns = struct {
-		Id    string //   
-        Ip    string //   
-        Name  string //   
-        Op    string //
+		Id   string //
+		Ip   string //
+		Name string //
+		Op   string //
 	}{
-		Id:   "id",    
-        Ip:   "ip",    
-        Name: "name",  
-        Op:   "op",
+		Id:   "id",
+		Ip:   "ip",
+		Name: "name",
+		Op:   "op",
 	}
 )
 

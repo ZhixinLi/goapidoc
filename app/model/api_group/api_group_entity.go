@@ -11,9 +11,9 @@ import (
 
 // Entity is the golang structure for table api_group.
 type Entity struct {
-    Id   int    `orm:"id,primary" json:"id"`   //         
-    Pid  int    `orm:"pid"        json:"pid"`  // 项目id  
-    Name string `orm:"name"       json:"name"` //         
+	Id   int    `orm:"id,primary" json:"id"`   //
+	Pid  int    `orm:"pid"        json:"pid"`  // 项目id
+	Name string `orm:"name"       json:"name"` //
 }
 
 // OmitEmpty sets OPTION_OMITEMPTY option for the model, which automatically filers

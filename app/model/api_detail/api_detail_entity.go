@@ -11,14 +11,15 @@ import (
 
 // Entity is the golang structure for table api_detail.
 type Entity struct {
-    Id          int    `orm:"id,primary"   json:"id"`           //       
-    Gid         int    `orm:"gid"          json:"gid"`          // 组id  
-    Name        string `orm:"name"         json:"name"`         //       
-    Uri         string `orm:"uri"          json:"uri"`          //       
-    Param       string `orm:"param"        json:"param"`        //       
-    ReturnValue string `orm:"return_value" json:"return_value"` //       
-    Author      string `orm:"author"       json:"author"`       //       
-    Time        int64  `orm:"time"         json:"time"`         //       
+	Id          int    `orm:"id,primary"   json:"id"`           //
+	Pid         int    `orm:"pid"          json:"pid"`          //
+	Gid         int    `orm:"gid"          json:"gid"`          // 组id
+	Name        string `orm:"name"         json:"name"`         //
+	Uri         string `orm:"uri"          json:"uri"`          //
+	Param       string `orm:"param"        json:"param"`        //
+	ReturnValue string `orm:"return_value" json:"return_value"` //
+	Author      string `orm:"author"       json:"author"`       //
+	Time        int64  `orm:"time"         json:"time"`         //
 }
 
 // OmitEmpty sets OPTION_OMITEMPTY option for the model, which automatically filers

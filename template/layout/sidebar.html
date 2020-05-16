@@ -2,10 +2,13 @@
     <section class="sidebar">
         <ul class="sidebar-menu">
             {{range $key,$data:=.bigMenu}}
-            <li class="treeview" id="{{$data.controller}}">
+            <li class="treeview" id="project_{{$data.id}}">
                 <a href="/list?pid={{$data.id}}">
-                    <i class="fa fa-circle-o text-aqua"></i>
+                    <i class="fa fa fa-book"></i>
                     <span>{{$data.name}}</span>
+                    <span class="pull-right-container">
+                        <small class="label pull-right bg-green">{{$data.count}}</small>
+                    </span>
                 </a>
             </li>
             {{end}}
@@ -14,8 +17,5 @@
 </aside>
 
 <script>
-    var controllerId = "{$menubigid}";
-    $('#' + controllerId).addClass('active');
-    var activeId = "menu-{$menusmallid}";
-    $('#' + activeId).addClass('active');
+    $("#project_{{.pid}}").addClass("active");
 </script>

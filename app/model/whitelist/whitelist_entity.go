@@ -11,10 +11,10 @@ import (
 
 // Entity is the golang structure for table whitelist.
 type Entity struct {
-    Id   int    `orm:"id,primary" json:"id"`   //   
-    Ip   string `orm:"ip"         json:"ip"`   //   
-    Name string `orm:"name"       json:"name"` //   
-    Op   int    `orm:"op"         json:"op"`   //   
+	Id   int    `orm:"id,primary" json:"id"`   //
+	Ip   string `orm:"ip"         json:"ip"`   //
+	Name string `orm:"name"       json:"name"` //
+	Op   int    `orm:"op"         json:"op"`   //
 }
 
 // OmitEmpty sets OPTION_OMITEMPTY option for the model, which automatically filers

@@ -21,11 +21,15 @@
                 </div>
                 <div class="box-body no-padding">
                     <ul class="nav nav-pills nav-stacked">
-                        <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox</a></li>
-                        <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
-                        <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
-                        <li><a href="#"><i class="fa fa-filter"></i> Junk </a></li>
-                        <li><a href="#"><i class="fa fa-trash-o"></i> Trash</a></li>
+                        {{range $key,$data:=.groupMenu}}
+                        <li class="group_li" data-id="{{$data.id}}">
+                            <a href="#">
+                                <i class="fa fa-inbox"></i>
+                                {{$data.name}}
+                                <span class="label label-warning pull-right">{{$data.count}}</span>
+                            </a>
+                        </li>
+                        {{end}}
                     </ul>
                 </div>
                 <!-- /.box-body -->
@@ -35,9 +39,12 @@
         <div class="col-md-10">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Inbox</h3>
+                    <h3 class="box-title">列表</h3>
                 </div>
                 <div class="box-body">
+                    <table id="bootstraptable">
+
+                    </table>
                 </div>
                 <div class="box-footer no-padding">
                 </div>
@@ -45,3 +52,65 @@
         </div>
     </div>
 </section>
+
+<script>
+    window.operateEvents = {
+        'click .modify-btn': function (e, value, row, index) {
+        },
+        'click .del-btn': function (e, value, row, index) {
+        },
+    };
+
+    function operateFormatter(value, row, index) {
+        let arr = [
+            '<button class="modify-btn btn btn-warning" type="button">',
+            '修改',
+            '</button>  ', ' ',
+            '<button class="del-btn btn btn-danger" type="button">',
+            '删除',
+            '</button>  ',
+        ];
+
+        return arr.join('');
+    }
+
+    $('.group_li').click(function () {
+        $('#bootstraptable').bootstrapTable('destroy');
+        $('#bootstraptable').bootstrapTable({
+            url: '/list/data?gid=' + $(this).attr('data-id'),
+            columns: [
+                {
+                    field: 'id',
+                    visible: false
+                },
+                {
+                    title: '接口名称',
+                    field: 'name',
+                    align: 'center'
+                },
+                {
+                    title: '接口uri',
+                    field: 'uri',
+                    align: 'center'
+                },
+                {
+                    title: '作者',
+                    field: 'author',
+                    align: 'center'
+                },
+                {
+                    title: '创建时间',
+                    field: 'time',
+                    align: 'center'
+                },
+                {
+                    title: '操作',
+                    field: 'operate',
+                    align: 'center',
+                    events: operateEvents,
+                    formatter: operateFormatter
+                }
+            ]
+        });
+    })
+</script>
