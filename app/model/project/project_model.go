@@ -24,13 +24,13 @@ var (
 	Model = &arModel{g.DB("default").Table(Table).Safe()}
 	// Columns defines and stores column names for table project.
 	Columns = struct {
-		Id          string //
-		Name        string //
-		Description string //
+		Id           string //   
+        Name         string //   
+        Description  string //
 	}{
-		Id:          "id",
-		Name:        "name",
-		Description: "description",
+		Id:          "id",           
+        Name:        "name",         
+        Description: "description",
 	}
 )
 

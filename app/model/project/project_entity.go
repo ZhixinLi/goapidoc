@@ -11,9 +11,9 @@ import (
 
 // Entity is the golang structure for table project.
 type Entity struct {
-	Id          int    `orm:"id,primary"  json:"id"`          //
-	Name        string `orm:"name"        json:"name"`        //
-	Description string `orm:"description" json:"description"` //
+    Id          int    `orm:"id,primary"  json:"id"`          //   
+    Name        string `orm:"name"        json:"name"`        //   
+    Description string `orm:"description" json:"description"` //   
 }
 
 // OmitEmpty sets OPTION_OMITEMPTY option for the model, which automatically filers

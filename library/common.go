@@ -1,6 +1,7 @@
 package library
 
 import (
+	"encoding/json"
 	"gf-app/app/model/api_detail"
 	"gf-app/app/model/api_group"
 	"gf-app/app/model/project"
@@ -11,12 +12,7 @@ import (
 
 func Fetch(r *ghttp.Request, uri string, param ...g.Map) {
 	var params = make(g.Map)
-	for _, v := range param {
-		for key, val := range v {
-			params[key] = val
-		}
-	}
-
+	params["headTitle"] = g.Cfg().GetString("main.name")
 	params["mainTpl"] = uri + ".html" //Input show page
 
 	projects, _ := project.FindAll()
@@ -43,13 +39,34 @@ func Fetch(r *ghttp.Request, uri string, param ...g.Map) {
 		var groupArr []g.Map
 		for _, v := range groups {
 			tmpCount, _ := api_detail.FindCount("gid", v.Id)
-			groupArr = append(groupArr, g.Map{"id": v.Id, "name": v.Name, "count": tmpCount})
+			groupArr = append(groupArr, g.Map{"id": v.Id, "name": v.Name, "count": tmpCount, "pid": v.Pid})
 		}
 		viewdata["groupMenu"] = groupArr //Project api group list
 	}
 
+	for _, v := range param {
+		for key, val := range v {
+			viewdata[key] = val
+		}
+	}
 	params["viewdata"] = viewdata //View data
 
-	//显示页面
+	//show view page
 	r.Response.WriteTpl("layout/layout.html", params)
+}
+
+func SendJson(r *ghttp.Request, send []g.Map) {
+	if len(send) == 0 {
+		r.Response.WriteJson("")
+	} else {
+		r.Response.WriteJson(send)
+	}
+}
+
+func GetJson(send []g.Map) string {
+	if b, err := json.Marshal(send); err != nil {
+		return ""
+	} else {
+		return string(b)
+	}
 }

@@ -24,25 +24,29 @@ var (
 	Model = &arModel{g.DB("default").Table(Table).Safe()}
 	// Columns defines and stores column names for table api_detail.
 	Columns = struct {
-		Id          string //
-		Pid         string //
-		Gid         string // 组id
-		Name        string //
-		Uri         string //
-		Param       string //
-		ReturnValue string //
-		Author      string //
-		Time        string //
+		Id           string //       
+        Pid          string //       
+        Gid          string // 组id  
+        Name         string //       
+        Uri          string //       
+        RequestType  string //       
+        Param        string //       
+        ReturnValue  string //       
+        Author       string //       
+        Time         string //       
+        UpdateTime   string //
 	}{
-		Id:          "id",
-		Pid:         "pid",
-		Gid:         "gid",
-		Name:        "name",
-		Uri:         "uri",
-		Param:       "param",
-		ReturnValue: "return_value",
-		Author:      "author",
-		Time:        "time",
+		Id:          "id",            
+        Pid:         "pid",           
+        Gid:         "gid",           
+        Name:        "name",          
+        Uri:         "uri",           
+        RequestType: "request_type",  
+        Param:       "param",         
+        ReturnValue: "return_value",  
+        Author:      "author",        
+        Time:        "time",          
+        UpdateTime:  "update_time",
 	}
 )
 

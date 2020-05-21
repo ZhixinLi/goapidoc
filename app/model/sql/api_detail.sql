@@ -1,104 +1,101 @@
 /*
-Navicat MySQL Data Transfer
+ Navicat Premium Data Transfer
 
-Source Server         : 本地
-Source Server Version : 50726
-Source Host           : localhost:3306
-Source Database       : apidoc
+ Source Server         : 虚拟机216
+ Source Server Type    : MySQL
+ Source Server Version : 50726
+ Source Host           : 192.168.0.216:3306
+ Source Schema         : apidoc
 
-Target Server Type    : MYSQL
-Target Server Version : 50726
-File Encoding         : 65001
+ Target Server Type    : MySQL
+ Target Server Version : 50726
+ File Encoding         : 65001
 
-Date: 2020-05-16 16:02:18
+ Date: 21/05/2020 14:52:25
 */
 
-SET FOREIGN_KEY_CHECKS=0;
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
 -- Table structure for api_detail
 -- ----------------------------
 DROP TABLE IF EXISTS `api_detail`;
-CREATE TABLE `api_detail` (
+CREATE TABLE `api_detail`  (
   `id` int(20) NOT NULL AUTO_INCREMENT,
-  `pid` int(11) DEFAULT NULL,
+  `pid` int(11) NULL DEFAULT NULL,
   `gid` int(20) NOT NULL COMMENT '组id',
-  `name` varchar(255) NOT NULL,
-  `uri` varchar(255) DEFAULT NULL,
-  `param` json DEFAULT NULL,
-  `return_value` json DEFAULT NULL,
-  `author` varchar(255) DEFAULT NULL,
-  `time` bigint(20) DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `uri` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `request_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `param` json NULL,
+  `return_value` json NULL,
+  `author` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `time` bigint(20) NULL DEFAULT NULL,
+  `update_time` bigint(20) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `gid` (`gid`),
-  KEY `pid` (`pid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of api_detail
--- ----------------------------
+  INDEX `gid`(`gid`) USING BTREE,
+  INDEX `pid`(`pid`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for api_group
 -- ----------------------------
 DROP TABLE IF EXISTS `api_group`;
-CREATE TABLE `api_group` (
+CREATE TABLE `api_group`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) NOT NULL COMMENT '项目id',
-  `name` varchar(100) NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of api_group
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for project
 -- ----------------------------
 DROP TABLE IF EXISTS `project`;
-CREATE TABLE `project` (
+CREATE TABLE `project`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `description` text,
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `description` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of project
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for whitelist
 -- ----------------------------
 DROP TABLE IF EXISTS `whitelist`;
-CREATE TABLE `whitelist` (
+CREATE TABLE `whitelist`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `op` int(11) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `ip` (`ip`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+  `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `op` int(11) NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `ip`(`ip`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of whitelist
+-- Triggers structure for table api_group
 -- ----------------------------
-INSERT INTO `whitelist` VALUES ('1', '127.0.0.1', 'Localhost', '0');
 DROP TRIGGER IF EXISTS `delete_api`;
-DELIMITER ;;
+delimiter ;;
 CREATE TRIGGER `delete_api` AFTER DELETE ON `api_group` FOR EACH ROW begin
 set @id=OLD.id;
 delete from function where aid=@id;
 end
 ;;
-DELIMITER ;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table project
+-- ----------------------------
 DROP TRIGGER IF EXISTS `delete_project`;
-DELIMITER ;;
+delimiter ;;
 CREATE TRIGGER `delete_project` AFTER DELETE ON `project` FOR EACH ROW begin
 set @id=OLD.id;
 delete from api where pid=@id;
 delete from project_address where pid=@id;
 end
 ;;
-DELIMITER ;
+delimiter ;
+
+SET FOREIGN_KEY_CHECKS = 1;

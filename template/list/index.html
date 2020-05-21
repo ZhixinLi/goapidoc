@@ -1,3 +1,10 @@
+<style>
+    .table-hover > tbody > tr:hover > td,
+    .table-hover > tbody > tr:hover > th {
+        color: orange;
+        cursor: pointer;
+    }
+</style>
 <section class="content-header">
     <h1>
         {{if eq .op 1}}
@@ -22,8 +29,8 @@
                 <div class="box-body no-padding">
                     <ul class="nav nav-pills nav-stacked">
                         {{range $key,$data:=.groupMenu}}
-                        <li class="group_li" data-id="{{$data.id}}">
-                            <a href="#">
+                        <li id="group_{{$data.id}}">
+                            <a href="/list?pid={{$data.pid}}&gid={{$data.id}}">
                                 <i class="fa fa-inbox"></i>
                                 {{$data.name}}
                                 <span class="label label-warning pull-right">{{$data.count}}</span>
@@ -32,21 +39,59 @@
                         {{end}}
                     </ul>
                 </div>
-                <!-- /.box-body -->
             </div>
-            <!-- /. box -->
         </div>
+
         <div class="col-md-10">
-            <div class="box box-primary">
+            <div class="box box-warning" id="detail_list">
                 <div class="box-header with-border">
                     <h3 class="box-title">列表</h3>
+
+                    <div class="box-tools">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-minus"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="box-body">
                     <table id="bootstraptable">
 
                     </table>
                 </div>
-                <div class="box-footer no-padding">
+            </div>
+            <div class="box box-warning" id="detail_info" style="display: none">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        <span class="label label-success pull-left" style="margin-right: 10px">{{.detail_data.request_type}}</span>
+                        {{.detail_data.uri}}
+                        {{.detail_data.name}}
+                    </h3>
+
+                    <div class="pull-right">
+                        <a href="#" id="detail_modify" style="margin-right:10px"><i class="fa fa-gear"></i></a>
+                        <a href="/list?pid={{.pid}}&gid={{.gid}}"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <h3>
+                        <i class="fa fa-globe"></i> 参数
+                    </h3>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 50%">参数名</th>
+                            <th>说明</th>
+                        </tr>
+                        {{range $key,$data:=.detail_data.param}}
+                        <tr>
+                            <td>{{$data.key}}</td>
+                            <td>{{$data.value}}</td>
+                        </tr>
+                        {{end}}
+                    </table>
+                    <h3>
+                        <i class="fa fa-globe"></i> 返回
+                    </h3>
+                    <pre id="return_value"></pre>
                 </div>
             </div>
         </div>
@@ -54,6 +99,12 @@
 </section>
 
 <script>
+    let table_data = {{.table_data}};
+    let op = {{.op}};
+    let gid = {{.gid}};
+    let aid = {{.aid}};
+    let return_value={{.detail_data.return_value}};
+
     window.operateEvents = {
         'click .modify-btn': function (e, value, row, index) {
         },
@@ -62,22 +113,31 @@
     };
 
     function operateFormatter(value, row, index) {
-        let arr = [
-            '<button class="modify-btn btn btn-warning" type="button">',
-            '修改',
-            '</button>  ', ' ',
-            '<button class="del-btn btn btn-danger" type="button">',
-            '删除',
-            '</button>  ',
-        ];
+        let arr = [];
+
+        if (op == 1) {
+            arr.push(
+                '<button class="modify-btn btn btn-warning" type="button">',
+                '修改',
+                '</button>  ', ' ',
+                '<button class="del-btn btn btn-danger" type="button">',
+                '删除',
+                '</button>  ',
+            )
+        } else {
+            arr = ["-"];
+        }
 
         return arr.join('');
     }
 
-    $('.group_li').click(function () {
+    function setTable() {
         $('#bootstraptable').bootstrapTable('destroy');
         $('#bootstraptable').bootstrapTable({
-            url: '/list/data?gid=' + $(this).attr('data-id'),
+            data: table_data,
+            onClickRow: function (row) {
+                window.location.href = "/list?pid={{.pid}}&gid={{.gid}}&aid=" + row.id
+            },
             columns: [
                 {
                     field: 'id',
@@ -86,31 +146,78 @@
                 {
                     title: '接口名称',
                     field: 'name',
-                    align: 'center'
+                    align: 'center',
+                    valign: 'middle',
                 },
                 {
                     title: '接口uri',
                     field: 'uri',
-                    align: 'center'
+                    align: 'center',
+                    valign: 'middle',
                 },
                 {
                     title: '作者',
                     field: 'author',
-                    align: 'center'
+                    align: 'center',
+                    valign: 'middle',
                 },
                 {
                     title: '创建时间',
                     field: 'time',
-                    align: 'center'
+                    align: 'center',
+                    valign: 'middle',
                 },
                 {
                     title: '操作',
                     field: 'operate',
                     align: 'center',
+                    valign: 'middle',
                     events: operateEvents,
                     formatter: operateFormatter
                 }
-            ]
+            ],
         });
-    })
+    }
+
+    function syntaxHighlight(json) {
+        if (typeof json != 'string') {
+            json = JSON.stringify(json, undefined, 2);
+        }
+        json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+
+    $("#group_" + gid).addClass("active");
+
+    if (table_data != null) {
+        setTable();
+    }
+
+    if (aid != 0) {
+        $('#detail_list').hide();
+        $('#detail_info').show();
+
+        $('#return_value').html(syntaxHighlight(return_value));
+    }
+
+    $('#detail_modify').click(function () {
+        $('.mod-modal').modal();
+    });
 </script>
+
+{{include "list/newmodal.html"}}
+{{include "list/modmodal.html" .detail_data}}

@@ -19,7 +19,7 @@
 
 # Database.
 [database]
-    link  = "mysql:root:111111@tcp(127.0.0.1:3306)/apidoc"
+    link  = "mysql:root:111111@tcp(192.168.0.216:3306)/apidoc"
     debug = true
     # Database logger.
     [database.logger]

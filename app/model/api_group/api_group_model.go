@@ -24,13 +24,13 @@ var (
 	Model = &arModel{g.DB("default").Table(Table).Safe()}
 	// Columns defines and stores column names for table api_group.
 	Columns = struct {
-		Id   string //
-		Pid  string // 项目id
-		Name string //
+		Id    string //         
+        Pid   string // 项目id  
+        Name  string //
 	}{
-		Id:   "id",
-		Pid:  "pid",
-		Name: "name",
+		Id:   "id",    
+        Pid:  "pid",   
+        Name: "name",
 	}
 )
 
