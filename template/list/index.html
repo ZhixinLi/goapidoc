@@ -8,7 +8,7 @@
 <section class="content-header">
     <h1>
         {{if eq .op 1}}
-        {{print "<button class='btn btn-success'>新建分组</button> <button class='btn btn-warning'>添加接口</button>"}}
+        {{print "<button class='btn btn-success' id='add_new_group'>新建分组</button> <button class='btn btn-warning' id='add_new_detail'>添加接口</button>"}}
         {{end}}
     </h1>
 </section>
@@ -59,23 +59,30 @@
                     </table>
                 </div>
             </div>
+
             <div class="box box-warning" id="detail_info" style="display: none">
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         <span class="label label-success pull-left" style="margin-right: 10px">{{.detail_data.request_type}}</span>
-                        {{.detail_data.uri}}
                         {{.detail_data.name}}
                     </h3>
 
                     <div class="pull-right">
+                        {{if eq .op 1}}
                         <a href="#" id="detail_modify" style="margin-right:10px"><i class="fa fa-gear"></i></a>
+                        <a href="#" id="detail_delete" style="margin-right:10px"><i class="fa fa-trash"></i></a>
+                        {{end}}
                         <a href="/list?pid={{.pid}}&gid={{.gid}}"><i class="fa fa-times"></i></a>
                     </div>
                 </div>
                 <div class="box-body">
-                    <h3>
-                        <i class="fa fa-globe"></i> 参数
-                    </h3>
+                    <h4>
+                        <i class="fa fa-globe"></i> <b style="margin-right: 20px">URI</b> {{.detail_data.uri}}
+                    </h4>
+                    <hr>
+                    <h4>
+                        <i class="fa fa-globe"></i> <b>参数</b>
+                    </h4>
                     <table class="table table-bordered">
                         <tr>
                             <th style="width: 50%">参数名</th>
@@ -88,9 +95,9 @@
                         </tr>
                         {{end}}
                     </table>
-                    <h3>
-                        <i class="fa fa-globe"></i> 返回
-                    </h3>
+                    <h4>
+                        <i class="fa fa-globe"></i> <b>返回</b>
+                    </h4>
                     <pre id="return_value"></pre>
                 </div>
             </div>
@@ -99,42 +106,20 @@
 </section>
 
 <script>
-    let table_data = {{.table_data}};
-    let op = {{.op}};
-    let gid = {{.gid}};
-    let aid = {{.aid}};
-    let return_value={{.detail_data.return_value}};
-
-    window.operateEvents = {
-        'click .modify-btn': function (e, value, row, index) {
-        },
-        'click .del-btn': function (e, value, row, index) {
-        },
-    };
-
-    function operateFormatter(value, row, index) {
-        let arr = [];
-
-        if (op == 1) {
-            arr.push(
-                '<button class="modify-btn btn btn-warning" type="button">',
-                '修改',
-                '</button>  ', ' ',
-                '<button class="del-btn btn btn-danger" type="button">',
-                '删除',
-                '</button>  ',
-            )
-        } else {
-            arr = ["-"];
-        }
-
-        return arr.join('');
-    }
+    let table_data = '{{.table_data}}';
+    let op = '{{.op}}';
+    let pid = '{{.pid}}';
+    let gid = '{{.gid}}';
+    let aid = '{{.aid}}';
+    let return_value = '{{.detail_data.return_value}}';
+    let name = "{{.detail_data.name}}"
+    let uri = "{{.detail_data.uri}}"
+    let request_type = "{{.detail_data.request_type}}"
 
     function setTable() {
         $('#bootstraptable').bootstrapTable('destroy');
         $('#bootstraptable').bootstrapTable({
-            data: table_data,
+            data: JSON.parse(table_data),
             onClickRow: function (row) {
                 window.location.href = "/list?pid={{.pid}}&gid={{.gid}}&aid=" + row.id
             },
@@ -166,14 +151,6 @@
                     field: 'time',
                     align: 'center',
                     valign: 'middle',
-                },
-                {
-                    title: '操作',
-                    field: 'operate',
-                    align: 'center',
-                    valign: 'middle',
-                    events: operateEvents,
-                    formatter: operateFormatter
                 }
             ],
         });
@@ -203,7 +180,7 @@
 
     $("#group_" + gid).addClass("active");
 
-    if (table_data != null) {
+    if (table_data != 'null') {
         setTable();
     }
 
@@ -211,11 +188,64 @@
         $('#detail_list').hide();
         $('#detail_info').show();
 
-        $('#return_value').html(syntaxHighlight(return_value));
+        $('#return_value').html(syntaxHighlight(JSON.parse(return_value)));
     }
 
     $('#detail_modify').click(function () {
         $('.mod-modal').modal();
+    });
+
+    $('#detail_delete').click(function () {
+        let cf = confirm("确认删除吗?")
+
+        if (cf) {
+            $.ajax({
+                type: 'POST',
+                url: '/list/delete',
+                data: {
+                    id: parseInt(aid),
+                },
+                success: function (redata) {
+                    if (redata.status == 1) {
+                        window.location.href = "/list?pid=" + pid + "&gid=" + gid;
+                    } else {
+                        alert("删除失败" + redata.status);
+                    }
+                },
+                error: function () {
+                    alert("发生错误");
+                }
+            })
+        }
+    });
+
+    $('#add_new_group').click(function () {
+        let cf = prompt("请输入分组名称");
+
+        if (cf != '' || cf != undefined || cf != null) {
+            $.ajax({
+                type: 'POST',
+                url: '/list/addgroup',
+                data: {
+                    pid: parseInt(pid),
+                    name: cf
+                },
+                success: function (redata) {
+                    if (redata.status == 1) {
+                        window.location.href = "/list?pid=" + pid;
+                    } else {
+                        alert("删除失败" + redata.status);
+                    }
+                },
+                error: function () {
+                    alert("发生错误");
+                }
+            })
+        }
+    });
+
+    $('#add_new_detail').click(function () {
+        $('.new-modal').modal();
     });
 </script>
 

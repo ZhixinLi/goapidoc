@@ -55,14 +55,11 @@ func Fetch(r *ghttp.Request, uri string, param ...g.Map) {
 	r.Response.WriteTpl("layout/layout.html", params)
 }
 
-func SendJson(r *ghttp.Request, send []g.Map) {
-	if len(send) == 0 {
-		r.Response.WriteJson("")
-	} else {
-		r.Response.WriteJson(send)
-	}
+func SendJson(r *ghttp.Request, send g.Map) {
+	r.Response.WriteJsonExit(send)
 }
 
+//Transform table data to json string
 func GetJson(send []g.Map) string {
 	if b, err := json.Marshal(send); err != nil {
 		return ""

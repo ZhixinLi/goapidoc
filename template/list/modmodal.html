@@ -1,5 +1,12 @@
+<style>
+    input {
+        border: 1px solid silver;
+        border-radius: 3px;
+        padding-left: 5px;
+    }
+</style>
 <div class="modal mod-modal" data-backdrop="false">
-    <div class="modal-dialog" style="width: 1000px;">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -8,23 +15,41 @@
             </div>
             <div class="modal-body">
                 <h5>
-                    <i class="fa fa-globe"></i> 参数
+                    <i class="fa fa-globe"></i> <b>基础信息</b>
+                </h5>
+                <div>
+                    <div style="margin-bottom: 5px">
+                        <div style="width: 20%;display: inline-block">URI：</div>
+                        <input value="{{.uri}}" id="mod_uri" type="text" style="margin-right: 5px">
+                    </div>
+                    <div style="margin-bottom: 5px">
+                        <div style="width: 20%;display: inline-block">名称：</div>
+                        <input value="{{.name}}" id="mod_name" type="text" style="margin-right: 5px">
+                    </div>
+                    <div style="margin-bottom: 5px">
+                        <div style="width: 20%;display: inline-block">请求方式：</div>
+                        <input value="{{.request_type}}" id="mod_request_type" type="text" style="margin-right: 5px">
+                    </div>
+                </div>
+
+                <h5>
+                    <i class="fa fa-globe"></i> <b>参数</b>
                 </h5>
                 <div id="mod_param_box">
                     {{range $key,$data:=.param}}
                     <div style="margin-bottom: 5px" data-id="100">
-                        参数：<input class="mod_input_param" value="{{$data.key}}" type="text" style="margin-right: 5px">
-                        说明：<input class="mod_input_desc" value="{{$data.value}}" type="text">
+                        参数：<input class="mod_input_param" value="{{$data.key}}" type="text" style="margin-right: 5px;width: 20%">
+                        说明：<input class="mod_input_desc" value="{{$data.value}}" type="text" style="width: 40%">
                     </div>
                     {{end}}
                     <div style="margin-bottom: 5px" data-id="100">
-                        参数：<input class="mod_input_param" type="text" style="margin-right: 5px">
-                        说明：<input class="mod_input_desc" type="text">
+                        参数：<input class="mod_input_param" type="text" style="margin-right: 5px;width: 20%">
+                        说明：<input class="mod_input_desc" type="text" style="width: 40%">
                     </div>
                 </div>
                 <hr>
                 <h5>
-                    <i class="fa fa-globe"></i> 返回
+                    <i class="fa fa-globe"></i> <b>返回</b>
                 </h5>
                 <textarea style="width: 100%;height: 200px" id="mod_return_value"></textarea>
             </div>
@@ -42,14 +67,14 @@
         if ($(this).parent().next().attr('data-id') != 100) {
             $('#mod_param_box').append(
                 '<div style="margin-bottom: 5px" data-id="100">' +
-                ' 参数：<input class="mod_input_param" type="text" style="margin-right: 5px">' +
-                ' 说明：<input class="mod_input_desc" type="text">' +
+                ' 参数：<input class="mod_input_param" type="text" style="margin-right: 5px;width: 20%">' +
+                ' 说明：<input class="mod_input_desc" type="text" style="width: 40%">' +
                 '</div>'
             )
         }
-    })
+    });
 
-    $('#mod_return_value').val(JSON.stringify(return_value, undefined, 2))
+    $('#mod_return_value').val(JSON.stringify(JSON.parse(return_value), undefined, 2));
 
     $('#submitmod').click(function () {
         let param_str_arr = [];
@@ -59,20 +84,27 @@
             }
             param_str_arr.push('"' + $('.mod_input_param').eq(i).val() + '":' + '"' + $('.mod_input_desc').eq(i).val() + '"');
         }
-        param_str = '{' + param_str_arr.join(',') + '}';
+        let param_str = '{' + param_str_arr.join(',') + '}';
         $.ajax({
             type: 'POST',
-            url: '/list/modify',
+            url: '/list/update',
             data: {
-                id: aid,
+                id: parseInt(aid),
+                uri: $('#mod_uri').val(),
+                name: $('#mod_name').val(),
+                request_type: $('#mod_request_type').val(),
                 param: param_str,
                 return_value: JSON.stringify(JSON.parse($('#mod_return_value').val()))
             },
-            success: function () {
-
+            success: function (redata) {
+                if (redata.status == 1) {
+                    window.location.reload();
+                } else {
+                    alert("修改失败" + redata.status);
+                }
             },
             error: function () {
-
+                alert("发生错误");
             }
         })
     });

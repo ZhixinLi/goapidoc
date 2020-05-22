@@ -1,5 +1,5 @@
 <div class="modal new-modal" data-backdrop="false">
-    <div class="modal-dialog" style="width: 1000px;">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -8,23 +8,41 @@
             </div>
             <div class="modal-body">
                 <h5>
-                    <i class="fa fa-globe"></i> 参数
+                    <i class="fa fa-globe"></i> <b>基础信息</b>
+                </h5>
+                <div>
+                    <div style="margin-bottom: 5px">
+                        <div style="width: 20%;display: inline-block">URI：</div>
+                        <input value="" id="new_uri" type="text" style="margin-right: 5px">
+                    </div>
+                    <div style="margin-bottom: 5px">
+                        <div style="width: 20%;display: inline-block">名称：</div>
+                        <input value="" id="new_name" type="text" style="margin-right: 5px">
+                    </div>
+                    <div style="margin-bottom: 5px">
+                        <div style="width: 20%;display: inline-block">请求方式：</div>
+                        <input value="" id="new_request_type" type="text" style="margin-right: 5px">
+                    </div>
+                </div>
+
+                <h5>
+                    <i class="fa fa-globe"></i> <b>参数</b>
                 </h5>
                 <div id="param_box">
                     <div style="margin-bottom: 5px" data-id="100">
-                        参数：<input class="input_param" type="text" style="margin-right: 5px">
-                        说明：<input class="input_desc" type="text">
+                        参数：<input class="input_param" type="text" style="margin-right: 5px;width: 20%">
+                        说明：<input class="input_desc" type="text" style="width: 40%">
                     </div>
                 </div>
                 <hr>
                 <h5>
-                    <i class="fa fa-globe"></i> 返回
+                    <i class="fa fa-globe"></i> <b>返回</b>
                 </h5>
-                <textarea style="width: 100%;height: 100px"></textarea>
+                <textarea style="width: 100%;height: 100px" id="new_return_value"></textarea>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary modal-submit" id="submit">提交</button>
+                <button type="button" class="btn btn-primary modal-submit" id="submitnew">提交</button>
             </div>
         </div><!-- /.modal-content -->
         <!--</form>-->
@@ -36,10 +54,44 @@
         if ($(this).parent().next().attr('data-id') != 100) {
             $('#param_box').append(
                 '<div style="margin-bottom: 5px" data-id="100">' +
-                ' 参数：<input class="input_param" type="text" style="margin-right: 5px">' +
-                ' 说明：<input class="input_desc" type="text">' +
+                ' 参数：<input class="input_param" type="text" style="margin-right: 5px;width: 20%">' +
+                ' 说明：<input class="input_desc" type="text" style="width: 40%">' +
                 '</div>'
             )
         }
-    })
+    });
+
+    $('#submitnew').click(function () {
+        let param_str_arr = [];
+        for (var i = 0; i < $('.input_param').length; i++) {
+            if ($('.input_param').eq(i).val() == '') {
+                continue;
+            }
+            param_str_arr.push('"' + $('.input_param').eq(i).val() + '":' + '"' + $('.input_desc').eq(i).val() + '"');
+        }
+        let param_str = '{' + param_str_arr.join(',') + '}';
+        $.ajax({
+            type: 'POST',
+            url: '/list/adddetail',
+            data: {
+                pid: parseInt(pid),
+                gid: parseInt(gid),
+                uri: $('#new_uri').val(),
+                name: $('#new_name').val(),
+                request_type: $('#new_request_type').val(),
+                param: param_str,
+                return_value: $('#new_return_value').val()
+            },
+            success: function (redata) {
+                if (redata.status == 1) {
+                    window.location.reload();
+                } else {
+                    alert("修改失败" + redata.status);
+                }
+            },
+            error: function () {
+                alert("发生错误");
+            }
+        })
+    });
 </script>
