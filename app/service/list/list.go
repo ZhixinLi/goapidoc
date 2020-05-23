@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"gf-app/app/model/api_detail"
 	"gf-app/app/model/api_group"
+	"gf-app/app/model/project"
 	"gf-app/app/model/whitelist"
 	"gf-app/library"
 	"github.com/gogf/gf/frame/g"
@@ -69,8 +70,8 @@ func GetAssignData(pid interface{}, gid interface{}, aid interface{}) g.Map {
 }
 
 //Update detail
-func UpdateDetial(id interface{}, uri interface{}, name interface{}, request_type interface{}, param interface{}, return_value interface{}) bool {
-	_, err := api_detail.Update(g.Map{"uri": uri, "name": name, "request_type": request_type, "param": param, "return_value": return_value, "update_time": time.Now().Unix()}, g.Map{"id": id})
+func UpdateDetial(id interface{}, uri interface{}, name interface{}, requestType interface{}, param interface{}, returnValue interface{}) bool {
+	_, err := api_detail.Update(g.Map{"uri": uri, "name": name, "request_type": requestType, "param": param, "return_value": returnValue, "update_time": time.Now().Unix()}, g.Map{"id": id})
 	if err != nil {
 		return false
 	}
@@ -107,6 +108,33 @@ func AddDetail(detail *api_detail.Entity, ip string) bool {
 		detail.ReturnValue = "{}"
 	}
 	_, err := api_detail.Insert(detail)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+//Add project
+func AddProject(name interface{}) bool {
+	_, err := project.Insert(g.Map{"name": name})
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+//Update project
+func UpdateProject(id interface{}, name interface{}) bool {
+	_, err := project.Update(g.Map{"name": name}, g.Map{"id": id})
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+//Update group
+func UpdateGroup(id interface{}, name interface{}) bool {
+	_, err := api_group.Update(g.Map{"name": name}, g.Map{"id": id})
 	if err != nil {
 		return false
 	}

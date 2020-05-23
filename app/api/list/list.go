@@ -28,12 +28,40 @@ type AddgroupReq struct {
 	Name string `p:"name" v:"required|min-length:1"`
 }
 
+type AddprojectReq struct {
+	Name string `p:"name" v:"required|min-length:1"`
+}
+
+type UpdateprojectReq struct {
+	Id   int    `p:"id" v:"required|min:1"`
+	Name string `p:"name" v:"required|min-length:1"`
+}
+
+type UpdategroupReq struct {
+	Id   int    `p:"id" v:"required|min:1"`
+	Name string `p:"name" v:"required|min-length:1"`
+}
+
 func (c *Controller) Index(r *ghttp.Request) {
 	pid := r.Get("pid")
 	gid := r.Get("gid")
 	aid := r.Get("aid")
 
 	library.Fetch(r, "list/index", list.GetAssignData(pid, gid, aid))
+}
+
+func (c *Controller) Add(r *ghttp.Request) {
+	var req *api_detail.Entity
+	if err := r.Parse(&req); err != nil {
+		library.SendJson(r, g.Map{"status": -1})
+	}
+
+	res := list.AddDetail(req, r.GetClientIp())
+	if res {
+		library.SendJson(r, g.Map{"status": 1})
+	} else {
+		library.SendJson(r, g.Map{"status": 0})
+	}
 }
 
 func (c *Controller) Update(r *ghttp.Request) {
@@ -78,13 +106,41 @@ func (c *Controller) Addgroup(r *ghttp.Request) {
 	}
 }
 
-func (c *Controller) Adddetail(r *ghttp.Request) {
-	var req *api_detail.Entity
+func (c *Controller) Addproject(r *ghttp.Request) {
+	var req *AddprojectReq
 	if err := r.Parse(&req); err != nil {
 		library.SendJson(r, g.Map{"status": -1})
 	}
 
-	res := list.AddDetail(req, r.GetClientIp())
+	res := list.AddProject(req.Name)
+	if res {
+		library.SendJson(r, g.Map{"status": 1})
+	} else {
+		library.SendJson(r, g.Map{"status": 0})
+	}
+}
+
+func (c *Controller) Updateproject(r *ghttp.Request) {
+	var req *UpdateprojectReq
+	if err := r.Parse(&req); err != nil {
+		library.SendJson(r, g.Map{"status": -1})
+	}
+
+	res := list.UpdateProject(req.Id, req.Name)
+	if res {
+		library.SendJson(r, g.Map{"status": 1})
+	} else {
+		library.SendJson(r, g.Map{"status": 0})
+	}
+}
+
+func (c *Controller) Updategroup(r *ghttp.Request) {
+	var req *UpdategroupReq
+	if err := r.Parse(&req); err != nil {
+		library.SendJson(r, g.Map{"status": -1})
+	}
+
+	res := list.UpdateGroup(req.Id, req.Name)
 	if res {
 		library.SendJson(r, g.Map{"status": 1})
 	} else {
