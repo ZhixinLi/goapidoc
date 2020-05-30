@@ -55,6 +55,10 @@ func Fetch(r *ghttp.Request, uri string, param ...g.Map) {
 	r.Response.WriteTpl("layout/layout.html", params)
 }
 
+func Display(r *ghttp.Request, uri string) {
+	r.Response.WriteTpl(uri)
+}
+
 func SendJson(r *ghttp.Request, send g.Map) {
 	r.Response.WriteJsonExit(send)
 }

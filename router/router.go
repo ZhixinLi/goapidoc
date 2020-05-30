@@ -3,6 +3,7 @@ package router
 import (
 	"gf-app/app/api/index"
 	"gf-app/app/api/list"
+	"gf-app/app/api/login"
 	"gf-app/app/service/middleware"
 	"github.com/gogf/gf/frame/g"
 )
@@ -12,6 +13,7 @@ func init() {
 
 	s.BindMiddleware("/*", middleware.Auth)
 
+	s.BindObject("/login", new(login.Controller))
 	s.BindObject("/index", new(index.Controller))
 	s.BindObject("/list", new(list.Controller))
 }
