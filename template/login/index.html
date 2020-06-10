@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>LOGIN</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/resource/loginpage/css/my-login.css">
@@ -19,10 +19,10 @@
                 <div class="card fat">
                     <div class="card-body">
                         <h4 class="card-title" style="text-align: center">登陆</h4>
-                        <form method="POST" action="/login" class="my-login-validation" novalidate="">
+                        <form id="submit_login" method="POST" class="my-login-validation">
                             <div class="form-group">
                                 <label for="email">账号</label>
-                                <input id="email" type="text" class="form-control" name="email" value="" required
+                                <input id="email" type="text" class="form-control" name="name" value="" required
                                        autofocus>
                                 <div class="invalid-feedback">
                                     请输入账号
@@ -31,7 +31,7 @@
 
                             <div class="form-group">
                                 <label for="password">密码</label>
-                                <input id="password" type="password" class="form-control" name="password" required
+                                <input id="password" type="password" class="form-control" name="pwd" required
                                        data-eye>
                                 <div class="invalid-feedback">
                                     请输入密码
@@ -40,8 +40,6 @@
 
                             <div class="form-group">
                                 <div class="custom-checkbox custom-control">
-                                    <input type="checkbox" name="remember" id="remember" class="custom-control-input">
-                                    <label for="remember" class="custom-control-label">记住 我</label>
                                 </div>
                             </div>
 
@@ -64,10 +62,29 @@
 <script src="/resource/jquery-3.3.1/jquery.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/popper.js/2.4.0/umd/popper.min.js"></script>
 <script src="/resource/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-<script src="/resource/loginpage/js/my-login.js"></script>
 
 <script>
+    $('#submit_login').on('submit', function (e) {
+        e.preventDefault();
+        var data = $(this).serialize();
 
+        $.ajax({
+            type: 'POST',
+            url: "/login/dologin",
+            data: data,
+            dataType: 'json',
+            success: function (redata) {
+                if (redata.status == 1) {
+                    window.location.href = '/index';
+                } else {
+                    alert('登陆失败' + redata.status);
+                }
+            },
+            error: function () {
+                alert('发生错误,请刷新重试');
+            }
+        });
+    });
 </script>
 </body>
 </html>

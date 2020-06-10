@@ -113,8 +113,8 @@ func (c *Controller) Addproject(r *ghttp.Request) {
 	}
 
 	res := list.AddProject(req.Name)
-	if res {
-		library.SendJson(r, g.Map{"status": 1})
+	if res != 0 {
+		library.SendJson(r, g.Map{"status": 1, "id": res})
 	} else {
 		library.SendJson(r, g.Map{"status": 0})
 	}

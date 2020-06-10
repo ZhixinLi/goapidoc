@@ -25,7 +25,7 @@ func Fetch(r *ghttp.Request, uri string, param ...g.Map) {
 	var viewdata = make(g.Map)
 	viewdata["bigMenu"] = menuArr //Project menu
 
-	user, _ := whitelist.FindOne("ip", r.GetClientIp())
+	user, _ := whitelist.FindOne("name", r.Session.Get("user"))
 	viewdata["op"] = user.Op         //Auth: modify
 	viewdata["ip"] = user.Ip         //User's ip
 	viewdata["username"] = user.Name //User's username

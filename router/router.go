@@ -6,14 +6,18 @@ import (
 	"gf-app/app/api/login"
 	"gf-app/app/service/middleware"
 	"github.com/gogf/gf/frame/g"
+	"github.com/gogf/gf/net/ghttp"
 )
 
 func init() {
 	s := g.Server()
 
-	s.BindMiddleware("/*", middleware.Auth)
-
-	s.BindObject("/login", new(login.Controller))
-	s.BindObject("/index", new(index.Controller))
-	s.BindObject("/list", new(list.Controller))
+	s.Group("/", func(group *ghttp.RouterGroup) {
+		group.ALL("/login", new(login.Controller))
+		group.Group("/", func(group *ghttp.RouterGroup) {
+			group.Middleware(middleware.Auth)
+			group.ALL("/index", new(index.Controller))
+			group.ALL("/list", new(list.Controller))
+		})
+	})
 }

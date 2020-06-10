@@ -15,6 +15,7 @@ type Entity struct {
     Ip   string `orm:"ip"         json:"ip"`   //   
     Name string `orm:"name"       json:"name"` //   
     Op   int    `orm:"op"         json:"op"`   //   
+    Pwd  string `orm:"pwd"        json:"pwd"`  //   
 }
 
 // OmitEmpty sets OPTION_OMITEMPTY option for the model, which automatically filers

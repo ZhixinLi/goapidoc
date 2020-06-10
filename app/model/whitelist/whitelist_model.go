@@ -27,12 +27,14 @@ var (
 		Id    string //   
         Ip    string //   
         Name  string //   
-        Op    string //
+        Op    string //   
+        Pwd   string //
 	}{
 		Id:   "id",    
         Ip:   "ip",    
         Name: "name",  
-        Op:   "op",
+        Op:   "op",    
+        Pwd:  "pwd",
 	}
 )
 

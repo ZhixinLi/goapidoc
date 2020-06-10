@@ -1,20 +1,28 @@
 package middleware
 
 import (
-	"gf-app/app/model/whitelist"
+	"fmt"
 	"github.com/gogf/gf/net/ghttp"
 	"net/http"
 )
 
 func Auth(r *ghttp.Request) {
-	check, err := whitelist.FindOne("ip", r.GetClientIp())
-	if err != nil {
-		r.Response.WriteStatus(http.StatusBadGateway)
-	}
+	//check, err := whitelist.FindOne("ip", r.GetClientIp())
+	//if err != nil {
+	//	r.Response.WriteStatus(http.StatusBadGateway)
+	//}
+	//
+	//if check == nil {
+	//	r.Response.WriteStatus(http.StatusForbidden)
+	//} else {
+	//	r.Middleware.Next()
+	//}
 
-	if check == nil {
-		r.Response.WriteStatus(http.StatusForbidden)
-	} else {
+	userinfo := r.Session.Get("user")
+	fmt.Println(userinfo)
+	if userinfo != nil {
 		r.Middleware.Next()
+	} else {
+		r.Response.WriteStatus(http.StatusForbidden)
 	}
 }

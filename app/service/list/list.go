@@ -115,12 +115,13 @@ func AddDetail(detail *api_detail.Entity, ip string) bool {
 }
 
 //Add project
-func AddProject(name interface{}) bool {
-	_, err := project.Insert(g.Map{"name": name})
+func AddProject(name interface{}) int64 {
+	res, err := project.Insert(g.Map{"name": name})
 	if err != nil {
-		return false
+		return 0
 	}
-	return true
+	id, _ := res.LastInsertId()
+	return id
 }
 
 //Update project
