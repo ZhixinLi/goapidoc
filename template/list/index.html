@@ -23,7 +23,7 @@
                 </div>
                 <div class="box-body no-padding">
                     <ul class="nav nav-pills nav-stacked">
-                        {{range $key,$data:=.groupMenu}}
+                        {{range $key,$data:=.sys_groupMenu}}
                         <li id="group_{{$data.id}}">
                             <a href="/list?pid={{$data.pid}}&gid={{$data.id}}">
                                 <i class="fa fa-inbox"></i>
@@ -43,7 +43,7 @@
                     <h3 class="box-title">列表</h3>
 
                     <div class="box-tools">
-                        {{if eq .op 1}}
+                        {{if eq .sys_op 1}}
                         <a href="#" id="group_modify" style="margin-right:10px"><i class="fa fa-gear"></i></a>
                         {{end}}
 
@@ -62,21 +62,21 @@
             <div class="box box-warning" id="detail_info" style="display: none">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        <span class="label label-success pull-left" style="margin-right: 10px">{{.detail_data.request_type}}</span>
-                        {{.detail_data.name}}
+                        <span class="label label-success pull-left" style="margin-right: 10px">{{.sys_detail_data.request_type}}</span>
+                        {{.sys_detail_data.name}}
                     </h3>
 
                     <div class="pull-right">
-                        {{if eq .op 1}}
+                        {{if eq .sys_op 1}}
                         <a href="#" id="detail_modify" style="margin-right:10px"><i class="fa fa-gear"></i></a>
                         <a href="#" id="detail_delete" style="margin-right:10px"><i class="fa fa-trash"></i></a>
                         {{end}}
-                        <a href="/list?pid={{.pid}}&gid={{.gid}}"><i class="fa fa-times"></i></a>
+                        <a href="/list?pid={{.sys_pid}}&gid={{.sys_gid}}"><i class="fa fa-times"></i></a>
                     </div>
                 </div>
                 <div class="box-body">
                     <h4>
-                        <i class="fa fa-globe"></i> <b style="margin-right: 20px">URI</b> {{.detail_data.uri}}
+                        <i class="fa fa-globe"></i> <b style="margin-right: 20px">URI</b> {{.sys_detail_data.uri}}
                     </h4>
                     <hr>
                     <h4>
@@ -87,7 +87,7 @@
                             <th style="width: 50%">参数名</th>
                             <th>说明</th>
                         </tr>
-                        {{range $key,$data:=.detail_data.param}}
+                        {{range $key,$data:=.sys_detail_data.param}}
                         <tr>
                             <td>{{$data.key}}</td>
                             <td>{{$data.value}}</td>
@@ -105,12 +105,12 @@
 </section>
 
 <script>
-    let table_data = '{{.table_data}}';
-    let op = '{{.op}}';
-    let pid = '{{.pid}}';
-    let gid = '{{.gid}}';
-    let aid = '{{.aid}}';
-    let return_value = '{{.detail_data.return_value}}';
+    let table_data = '{{.sys_table_data}}';
+    let op = '{{.sys_op}}';
+    let pid = '{{.sys_pid}}';
+    let gid = '{{.sys_gid}}';
+    let aid = '{{.sys_aid}}';
+    let return_value = '{{.sys_detail_data.return_value}}';
 
     function setTable() {
         $('#bootstraptable').bootstrapTable('destroy');
@@ -306,4 +306,4 @@
 </script>
 
 {{include "list/newmodal.html"}}
-{{include "list/modmodal.html" .detail_data}}
+{{include "list/modmodal.html" .sys_detail_data}}

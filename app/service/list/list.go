@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-//Get assign data
+//Get assign data.
 func GetAssignData(pid interface{}, gid interface{}, aid interface{}) g.Map {
 	//Get default group id
 	if gid == nil {
@@ -66,10 +66,10 @@ func GetAssignData(pid interface{}, gid interface{}, aid interface{}) g.Map {
 		}
 	}
 
-	return g.Map{"table_data": library.GetJson(send), "detail_data": detail, "gid": gid, "aid": aid}
+	return g.Map{"sys_table_data": library.GetJson(send), "sys_detail_data": detail, "sys_gid": gid, "sys_aid": aid}
 }
 
-//Update detail
+//Update detail.
 func UpdateDetial(id interface{}, uri interface{}, name interface{}, requestType interface{}, param interface{}, returnValue interface{}) bool {
 	_, err := api_detail.Update(g.Map{"uri": uri, "name": name, "request_type": requestType, "param": param, "return_value": returnValue, "update_time": time.Now().Unix()}, g.Map{"id": id})
 	if err != nil {
@@ -78,7 +78,7 @@ func UpdateDetial(id interface{}, uri interface{}, name interface{}, requestType
 	return true
 }
 
-//Delete detail
+//Delete detail.
 func DeleteDetail(id interface{}) bool {
 	_, err := api_detail.Delete(g.Map{"id": id})
 	if err != nil {
@@ -87,7 +87,7 @@ func DeleteDetail(id interface{}) bool {
 	return true
 }
 
-//Add group
+//Add group.
 func AddGroup(pid interface{}, name interface{}) bool {
 	_, err := api_group.Insert(g.Map{"pid": pid, "name": name})
 	if err != nil {
@@ -96,9 +96,9 @@ func AddGroup(pid interface{}, name interface{}) bool {
 	return true
 }
 
-//Add Detail
-func AddDetail(detail *api_detail.Entity, ip string) bool {
-	user, _ := whitelist.FindOne("ip", ip)
+//Add Detail.
+func AddDetail(detail *api_detail.Entity, name string) bool {
+	user, _ := whitelist.FindOne("name", name)
 	detail.Author = user.Name
 	detail.Time = time.Now().Unix()
 	if len(detail.Param) == 0 {
@@ -114,7 +114,7 @@ func AddDetail(detail *api_detail.Entity, ip string) bool {
 	return true
 }
 
-//Add project
+//Add project.
 func AddProject(name interface{}) int64 {
 	res, err := project.Insert(g.Map{"name": name})
 	if err != nil {
@@ -124,7 +124,7 @@ func AddProject(name interface{}) int64 {
 	return id
 }
 
-//Update project
+//Update project.
 func UpdateProject(id interface{}, name interface{}) bool {
 	_, err := project.Update(g.Map{"name": name}, g.Map{"id": id})
 	if err != nil {
@@ -133,7 +133,7 @@ func UpdateProject(id interface{}, name interface{}) bool {
 	return true
 }
 
-//Update group
+//Update group.
 func UpdateGroup(id interface{}, name interface{}) bool {
 	_, err := api_group.Update(g.Map{"name": name}, g.Map{"id": id})
 	if err != nil {

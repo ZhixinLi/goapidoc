@@ -38,7 +38,8 @@
                 <div id="mod_param_box">
                     {{range $key,$data:=.param}}
                     <div style="margin-bottom: 5px" data-id="100">
-                        参数：<input class="mod_input_param" value="{{$data.key}}" type="text" style="margin-right: 5px;width: 20%">
+                        参数：<input class="mod_input_param" value="{{$data.key}}" type="text"
+                                  style="margin-right: 5px;width: 20%">
                         说明：<input class="mod_input_desc" value="{{$data.value}}" type="text" style="width: 40%">
                     </div>
                     {{end}}
@@ -85,6 +86,14 @@
             param_str_arr.push('"' + $('.mod_input_param').eq(i).val() + '":' + '"' + $('.mod_input_desc').eq(i).val() + '"');
         }
         let param_str = '{' + param_str_arr.join(',') + '}';
+        let return_value_str = '';
+        try {
+            return_value_str = JSON.stringify(JSON.parse($('#mod_return_value').val()))
+        } catch (e) {
+            alert("返回值内容不是JSON格式!");
+            return false;
+        }
+
         $.ajax({
             type: 'POST',
             url: '/list/update',
@@ -94,7 +103,7 @@
                 name: $('#mod_name').val(),
                 request_type: $('#mod_request_type').val(),
                 param: param_str,
-                return_value: JSON.stringify(JSON.parse($('#mod_return_value').val()))
+                return_value: return_value_str
             },
             success: function (redata) {
                 if (redata.status == 1) {

@@ -1,7 +1,7 @@
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu">
-            {{range $key,$data:=.bigMenu}}
+            {{range $key,$data:=.sys_bigMenu}}
             <li class="treeview" id="project_{{$data.id}}">
                 <a href="/list?pid={{$data.id}}">
                     <i class="fa fa fa-book"></i>
@@ -25,7 +25,8 @@
 </aside>
 
 <script>
-    $("#project_{{.pid}}").addClass("active");
+    let index_pid = '{{.sys_pid}}';
+    $("#project_" + index_pid).addClass("active");
 
     $('#add_project').click(function () {
         let cf = prompt("请输入项目名称");

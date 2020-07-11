@@ -1,12 +1,11 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/gogf/gf/net/ghttp"
-	"net/http"
 )
 
 func Auth(r *ghttp.Request) {
+	//Check auth through IP.
 	//check, err := whitelist.FindOne("ip", r.GetClientIp())
 	//if err != nil {
 	//	r.Response.WriteStatus(http.StatusBadGateway)
@@ -18,11 +17,13 @@ func Auth(r *ghttp.Request) {
 	//	r.Middleware.Next()
 	//}
 
-	userinfo := r.Session.Get("user")
-	fmt.Println(userinfo)
+	//Check auth through login session.
+	userinfo := r.Session.Get("sys_user")
 	if userinfo != nil {
 		r.Middleware.Next()
 	} else {
-		r.Response.WriteStatus(http.StatusForbidden)
+		//Session was expired,redirecting to login page.
+		//r.Response.WriteStatus(http.StatusForbidden)
+		r.Response.RedirectTo("/login")
 	}
 }

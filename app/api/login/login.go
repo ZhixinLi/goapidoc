@@ -26,7 +26,7 @@ func (c *Controller) Dologin(r *ghttp.Request) {
 
 	res := login.CheckLogin(req.Name, req.Pwd)
 	if res {
-		r.Session.Set("user", req.Name)
+		r.Session.Set("sys_user", req.Name)
 		library.SendJson(r, g.Map{"status": 1})
 	} else {
 		library.SendJson(r, g.Map{"status": 0})

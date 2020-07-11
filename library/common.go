@@ -11,37 +11,41 @@ import (
 )
 
 func Fetch(r *ghttp.Request, uri string, param ...g.Map) {
+	var groupArr []g.Map
+	var menuArr []g.Map
 	var params = make(g.Map)
-	params["headTitle"] = g.Cfg().GetString("main.name")
-	params["mainTpl"] = uri + ".html" //Input show page
+	var viewdata = make(g.Map)
+
+	name := g.Cfg().GetString("main.name") //Get config value from config.toml.
 
 	projects, _ := project.FindAll()
-	var menuArr []g.Map
+	user, _ := whitelist.FindOne("name", r.Session.Get("sys_user"))
+
 	for _, v := range projects {
 		tmpCount, _ := api_detail.FindCount("pid", v.Id)
 		menuArr = append(menuArr, g.Map{"id": v.Id, "name": v.Name, "count": tmpCount})
 	}
 
-	var viewdata = make(g.Map)
-	viewdata["bigMenu"] = menuArr //Project menu
+	//Project menu.
+	viewdata["sys_bigMenu"] = menuArr
+	viewdata["sys_op"] = user.Op         //Auth: modify.
+	viewdata["sys_ip"] = user.Ip         //User's ip.
+	viewdata["sys_username"] = user.Name //User's username.
+	viewdata["sys_indexname"] = name
 
-	user, _ := whitelist.FindOne("name", r.Session.Get("user"))
-	viewdata["op"] = user.Op         //Auth: modify
-	viewdata["ip"] = user.Ip         //User's ip
-	viewdata["username"] = user.Name //User's username
-
-	viewdata["indexname"] = g.Cfg().GetString("main.name") //Get config value from config.toml
-
-	pid := r.Get("pid") //Get project id form request info
+	//Get project id form request info.
+	pid := r.Get("pid")
 	if pid != nil {
-		viewdata["pid"] = pid //Project id
+		//Project id.
+		viewdata["sys_pid"] = pid
 		groups, _ := api_group.FindAll("pid", pid)
-		var groupArr []g.Map
+
 		for _, v := range groups {
 			tmpCount, _ := api_detail.FindCount("gid", v.Id)
 			groupArr = append(groupArr, g.Map{"id": v.Id, "name": v.Name, "count": tmpCount, "pid": v.Pid})
 		}
-		viewdata["groupMenu"] = groupArr //Project api group list
+		//Project api group list
+		viewdata["sys_groupMenu"] = groupArr
 	}
 
 	for _, v := range param {
@@ -49,9 +53,13 @@ func Fetch(r *ghttp.Request, uri string, param ...g.Map) {
 			viewdata[key] = val
 		}
 	}
-	params["viewdata"] = viewdata //View data
 
-	//show view page
+	//Total params.
+	params["sys_viewData"] = viewdata
+	params["sys_headTitle"] = name
+	params["sys_mainTpl"] = uri + ".html" //Input show page.
+
+	//show view page.
 	r.Response.WriteTpl("layout/layout.html", params)
 }
 
@@ -63,7 +71,7 @@ func SendJson(r *ghttp.Request, send g.Map) {
 	r.Response.WriteJsonExit(send)
 }
 
-//Transform table data to json string
+//Transform table data to json string.
 func GetJson(send []g.Map) string {
 	if b, err := json.Marshal(send); err != nil {
 		return ""

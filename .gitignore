@@ -16,4 +16,3 @@ cbuild
 */.DS_Store
 main
 .vscode
-config/config.toml

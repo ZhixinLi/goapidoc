@@ -56,7 +56,7 @@ func (c *Controller) Add(r *ghttp.Request) {
 		library.SendJson(r, g.Map{"status": -1})
 	}
 
-	res := list.AddDetail(req, r.GetClientIp())
+	res := list.AddDetail(req, r.Session.Get("sys_user").(string))
 	if res {
 		library.SendJson(r, g.Map{"status": 1})
 	} else {
