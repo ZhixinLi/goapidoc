@@ -1,6 +1,7 @@
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu">
+            <li class="header">Project List</li>
             {{range $key,$data:=.sys_bigMenu}}
             <li class="treeview" id="project_{{$data.id}}">
                 <a href="/list?pid={{$data.id}}">
@@ -13,7 +14,7 @@
             </li>
             {{end}}
             <li class="treeview" id="add_project">
-                <a href="#" style="margin-left: 25%;margin-right: 25%">
+                <a href="#" style="margin-left: 20%;margin-right: 25%">
                     <span>
                         <i class="fa fa fa-plus-circle"></i>
                         新建项目

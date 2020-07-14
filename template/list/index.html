@@ -38,7 +38,7 @@
         </div>
 
         <div class="col-md-10">
-            <div class="box box-warning" id="detail_list">
+            <div class="box box-danger" id="detail_list">
                 <div class="box-header with-border">
                     <h3 class="box-title">列表</h3>
 
@@ -59,7 +59,7 @@
                 </div>
             </div>
 
-            <div class="box box-warning" id="detail_info" style="display: none">
+            <div class="box box-danger" id="detail_info" style="display: none">
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         <span class="label label-success pull-left" style="margin-right: 10px">{{.sys_detail_data.request_type}}</span>
@@ -111,6 +111,8 @@
     let gid = '{{.sys_gid}}';
     let aid = '{{.sys_aid}}';
     let return_value = '{{.sys_detail_data.return_value}}';
+
+    $('#group_' + gid + ' a').css('border-left-color', '#DD4B39');
 
     function setTable() {
         $('#bootstraptable').bootstrapTable('destroy');
