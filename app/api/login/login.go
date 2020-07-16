@@ -15,6 +15,11 @@ type LoginReq struct {
 }
 
 func (c *Controller) Index(r *ghttp.Request) {
+	userinfo := r.Session.Get("sys_user")
+	if userinfo != nil {
+		r.Response.RedirectTo("/index")
+	}
+
 	library.Display(r, "login/index.html")
 }
 

@@ -21,7 +21,11 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat">{{.sys_ip}}</a>
+                                <a href="#" class="btn btn-default btn-flat" id="resetpwd">修改密码</a>
+                            </div>
+
+                            <div class="pull-right">
+                                <a href="#" class="btn btn-default btn-flat" id="logout">注销登陆</a>
                             </div>
                         </li>
                     </ul>
@@ -79,3 +83,24 @@
         color: rgba(121, 85, 72, 0.7)
     }
 </style>
+
+{{include "layout/pwdmodal.html"}}
+
+<script>
+    $('#resetpwd').click(function () {
+        $('.pwd-modal').modal();
+    });
+
+    $('#logout').click(function () {
+        $.ajax({
+            type: 'POST',
+            url: '/index/logout',
+            success: function () {
+                window.location.reload();
+            },
+            error: function () {
+                alertMessageError("发生错误!")
+            }
+        })
+    });
+</script>

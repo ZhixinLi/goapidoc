@@ -141,3 +141,22 @@ func UpdateGroup(id interface{}, name interface{}) bool {
 	}
 	return true
 }
+
+//Update whitelist pwd.
+func UpdateWhitelist(name string, oldPwd string, newPwd string) bool {
+	res, err := whitelist.FindOne(g.Map{"name": name, "pwd": oldPwd})
+	if err != nil {
+		return false
+	}
+
+	if res == nil {
+		return false
+	}
+
+	_, er := whitelist.Update(g.Map{"pwd": newPwd}, g.Map{"name": name})
+	if er != nil {
+		return false
+	}
+
+	return true
+}

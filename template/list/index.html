@@ -217,7 +217,7 @@
                     if (redata.status == 1) {
                         window.location.href = "/list?pid=" + pid + "&gid=" + gid;
                     } else {
-                        alert("删除失败" + redata.status);
+                        alert("删除失败,status :" + redata.status);
                     }
                 },
                 error: function () {
@@ -242,7 +242,7 @@
                     if (redata.status == 1) {
                         window.location.href = "/list?pid=" + pid;
                     } else {
-                        alert("新建失败" + redata.status);
+                        alert("新建失败,status :" + redata.status);
                     }
                 },
                 error: function () {
@@ -271,7 +271,7 @@
                     if (redata.status == 1) {
                         window.location.href = "/list?pid=" + pid;
                     } else {
-                        alert("修改失败" + redata.status);
+                        alert("修改失败,status :" + redata.status);
                     }
                 },
                 error: function () {
@@ -296,7 +296,7 @@
                     if (redata.status == 1) {
                         window.location.href = "/list?pid=" + pid + '&gid=' + gid;
                     } else {
-                        alert("修改失败" + redata.status);
+                        alert("修改失败,status :" + redata.status);
                     }
                 },
                 error: function () {
