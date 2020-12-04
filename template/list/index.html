@@ -282,6 +282,9 @@
     });
 
     $('#group_modify').click(function () {
+        if (gid <= 0) {
+            return false;
+        }
         let cf = prompt("请输入新的组名称");
 
         if (cf != '' && cf != undefined && cf != null) {
